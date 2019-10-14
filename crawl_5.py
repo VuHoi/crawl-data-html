@@ -32,14 +32,13 @@ images=[]
 names=[]
 def get_product_page(page):
     print('Fetching page {}...'.format(page))
-    response = requests.get(settings.products_url1 + '?page={}'.format(page))
+    response = requests.get(settings. products_url5+ '?page={}'.format(page))
     selector = Selector(response.text)
   
-    container= selector.css('div.productitem > a.productitem--image-link')
-    img1= container.css('img:first-child')
+    img1= selector.css('img.card-image')
     
     images = img1.xpath('./@src').getall()
-    text = selector.css('h2.productitem--title')
+    text = selector.css('h4.card-title')
 
     names = text.xpath('.//a/text()').getall()
     
@@ -51,7 +50,7 @@ parent_data = copy.deepcopy(template_line)
 fieldnames = template_line.keys()
 
 
-with open('1.csv', 'w', newline='\n') as f:
+with open('5.csv', 'w', newline='\n') as f:
     writer = csv.DictWriter(f, fieldnames=fieldnames)
     writer.writeheader()
 

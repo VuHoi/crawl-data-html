@@ -32,18 +32,20 @@ images=[]
 names=[]
 def get_product_page(page):
     print('Fetching page {}...'.format(page))
-    response = requests.get(settings.products_url1 + '?page={}'.format(page))
+    response = requests.get(settings.products_url1+ '?page={}'.format(page))
     selector = Selector(response.text)
   
-    container= selector.css('div.productitem > a.productitem--image-link')
-    img1= container.css('img:first-child')
+    img1= selector.css('img.first--image')
     
-    images = img1.xpath('./@src').getall()
-    text = selector.css('h2.productitem--title')
+    images1 = img1.xpath('./@src').getall()
+    img2= selector.css('img.second--image')
+    
+    image2 = img2.xpath('./@src').getall()
+    text = selector.css('h4')
 
     names = text.xpath('.//a/text()').getall()
     
-    return (images,names)
+    return (images1,image2,names)
 
 
 template_line = get_template_line()
@@ -62,8 +64,8 @@ with open('1.csv', 'w', newline='\n') as f:
         
         i=0
         while(i<len(products[0])):
-            parent_data['image']=products[0][i]
-            parent_data['name']=products[1][i].replace('\n','').replace('\t','')
+            parent_data['image']=products[0][i]+','+products[1][i]
+            parent_data['name']=products[2][i].replace('\n','').replace('\t','')
             writer.writerow(parent_data)
             print(parent_data['name'])
             i+=1
